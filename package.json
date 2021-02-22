@@ -1,11 +1,29 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "Personal site backend",
-  "main": "index.js",
-  "scripts": {
-    "test": "test"
-  },
-  "author": "NorbertCseh",
-  "license": "ISC"
+	"name": "backend",
+	"version": "1.0.0",
+	"description": "Personal site backend",
+	"main": "dist/index.js",
+	"scripts": {
+		"prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
+		"build": "tsc",
+		"prestart": "npm run build",
+		"start": "nodemon .",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "NorbertCseh",
+	"license": "ISC",
+	"dependencies": {
+		"body-parser": "^1.19.0",
+		"dotenv": "^8.2.0",
+		"express": "^4.17.1",
+		"mongoose": "^5.11.17"
+	},
+	"devDependencies": {
+		"@types/dotenv": "^8.2.0",
+		"@types/express": "^4.17.11",
+		"@types/mongoose": "^5.10.3",
+		"@types/node": "^14.14.31",
+		"tslint": "^6.1.3",
+		"typescript": "^4.1.5"
+	}
 }
