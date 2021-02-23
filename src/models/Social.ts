@@ -1,27 +1,21 @@
 import { Schema } from 'mongoose';
 import * as mongoose from 'mongoose';
+import { SocialDoc } from '../documents/Social';
 
-const PostSchema: Schema = new Schema({
-	author: {
+const SocialSchema: Schema = new Schema({
+	cv: {
 		type: Schema.Types.ObjectId,
-		ref: 'User',
+		ref: 'Cv',
 		required: true,
 	},
-	postTitle: {
+	socialName: {
 		type: String,
 		required: true,
 	},
-	postBody: {
+	socialUrl: {
 		type: String,
 		required: true,
 	},
-	comments: [
-		{
-			type: Schema.Types.ObjectId,
-			ref: 'Comment',
-			required: false,
-		},
-	],
 	createdDate: {
 		type: Date,
 		required: true,
@@ -32,4 +26,4 @@ const PostSchema: Schema = new Schema({
 	},
 });
 
-export default mongoose.model('Post', PostSchema);
+export default mongoose.model<SocialDoc>('SocialSchema', SocialSchema);

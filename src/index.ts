@@ -5,6 +5,8 @@ import * as bodyParser from 'body-parser';
 
 import keys from './config/Keys';
 
+import userRoutes from './routes/User';
+
 // initialize configuration
 dotenv.config();
 
@@ -25,6 +27,8 @@ async function main() {
 
 	app.use(bodyParser.urlencoded({ extended: false }));
 	app.use(bodyParser.json());
+
+	app.use('/api/user', userRoutes);
 
 	await app.get('/', (_, res) => {
 		res.send('Welcome');
