@@ -1,28 +1,24 @@
 import { Schema } from 'mongoose';
 import * as mongoose from 'mongoose';
-import { PostDoc } from '../documents/Post';
+import { CommentDoc } from '../documents/Comment';
+import User from './User';
+import Post from './Post';
 
-const PostSchema: Schema = new Schema({
+const CommentSchema: Schema = new Schema({
 	author: {
 		type: Schema.Types.ObjectId,
 		ref: 'User',
 		required: true,
 	},
-	postTitle: {
+	post: {
+		type: Schema.Types.ObjectId,
+		ref: 'Post',
+		required: true,
+	},
+	commentBody: {
 		type: String,
 		required: true,
 	},
-	postBody: {
-		type: String,
-		required: true,
-	},
-	comments: [
-		{
-			type: Schema.Types.ObjectId,
-			ref: 'Comment',
-			required: false,
-		},
-	],
 	createdDate: {
 		type: Date,
 		required: true,
@@ -33,4 +29,4 @@ const PostSchema: Schema = new Schema({
 	},
 });
 
-export default mongoose.model<PostDoc>('Post', PostSchema);
+export default mongoose.model<CommentDoc>('Comment', CommentSchema);
