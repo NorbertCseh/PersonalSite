@@ -181,3 +181,8 @@ export async function getAllUsers() {
 		};
 	});
 }
+<<<<<<< HEAD
+=======
+
+// Can I delete the return {status:200, payload: 'blabla'} and create only 1 at the top?
+>>>>>>> 1894559281e17d8944646bf4ddc00c674a2e87db

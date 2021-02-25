@@ -25,7 +25,6 @@ export async function createPost(
     });
     await user.posts.push(newPost);
   });
-
   if (error) {
     return {
       status: 400,

@@ -1,6 +1,9 @@
 import { Schema } from 'mongoose';
 import * as mongoose from 'mongoose';
+<<<<<<< HEAD
 import { PostDoc } from '../documents/Post';
+=======
+>>>>>>> 1894559281e17d8944646bf4ddc00c674a2e87db
 
 const PostSchema: Schema = new Schema({
 	author: {
@@ -33,4 +36,8 @@ const PostSchema: Schema = new Schema({
 	},
 });
 
+<<<<<<< HEAD
 export default mongoose.model<PostDoc>('Post', PostSchema);
+=======
+export default mongoose.model('Post', PostSchema);
+>>>>>>> 1894559281e17d8944646bf4ddc00c674a2e87db
