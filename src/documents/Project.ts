@@ -1,12 +1,13 @@
-import * as mongoose from 'mongoose';
-import { UserDoc } from './User';
+import * as mongoose from "mongoose";
+import { UserDoc } from "./User";
 
 export interface ProjectDoc extends mongoose.Document {
-	_id: string;
-	user: UserDoc;
-	name: string;
-	URL: string;
-	imageURL: string;
-	creationDate: number;
-	lastUpdatedDate: number;
+  _id: string;
+  user: UserDoc;
+  name: string;
+  deployedURL: string;
+  gitURL: string;
+  imageURL: string;
+  creationDate: number;
+  lastUpdatedDate: number;
 }

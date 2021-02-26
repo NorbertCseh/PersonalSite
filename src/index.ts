@@ -8,12 +8,12 @@ import keys from "./config/Keys";
 
 import userRoutes from "./routes/User";
 import postRoutes from "./routes/Post";
+import profileRoutes from "./routes/Profile";
 
-// initialize configuration
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT; // default port to listen
+const PORT = process.env.PORT;
 
 async function main() {
   await mongoose
@@ -35,6 +35,7 @@ async function main() {
 
   app.use("/api/user", userRoutes);
   app.use("/api/post", postRoutes);
+  app.use("/api/profile", profileRoutes);
 
   await app.get("/", (_, res) => {
     res.send("Welcome");
