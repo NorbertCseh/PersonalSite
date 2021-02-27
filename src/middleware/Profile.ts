@@ -2,6 +2,8 @@ import { ProfileDoc } from "documents/Profile";
 import { UserDoc } from "documents/User";
 import UserSchema from "../models/User";
 import ProfileSchema from "../models/Profile";
+import User from "../models/User";
+import { timeStamp } from "console";
 
 //Get single profile by handle
 export async function getProfileByUserHandle(handle: string) {
@@ -98,4 +100,109 @@ export async function createProfile(
       };
     }
   });
+}
+
+//Edit profile
+export async function updateProfile(
+  handle: string,
+  requestedUser: UserDoc,
+  fieldsToEdit: ProfileDoc
+) {
+  return await UserSchema.findOne({ handle: handle })
+    .populate("profile")
+    .then(async (user) => {
+      if (requestedUser._id.toString() !== user._id.toString()) {
+        return {
+          status: 400,
+          msg: "You cannot edit this profile",
+          timeStamp: Date.now(),
+        };
+      }
+      if (!user.profile) {
+        return {
+          status: 400,
+          msg: "No profile found for this user",
+          timeStamp: Date.now(),
+        };
+      }
+      if (Object.keys(fieldsToEdit).length === 0) {
+        return {
+          status: 400,
+          msg: "No fields to edit",
+          timeStamp: Date.now(),
+        };
+      }
+      if (fieldsToEdit.firstName) {
+        user.profile.firstName = fieldsToEdit.firstName;
+      }
+      if (fieldsToEdit.middleName) {
+        user.profile.middleName = fieldsToEdit.middleName;
+      }
+      if (fieldsToEdit.lastName) {
+        user.profile.lastName = fieldsToEdit.lastName;
+      }
+      if (fieldsToEdit.birthday) {
+        user.profile.birthday = fieldsToEdit.birthday;
+      }
+      if (fieldsToEdit.address) {
+        user.profile.address = fieldsToEdit.address;
+      }
+      if (fieldsToEdit.phone) {
+        user.profile.phone = fieldsToEdit.phone;
+      }
+      return await user.profile
+        .save()
+        .then((profile) => {
+          return {
+            status: 200,
+            profile: profile,
+            timeStamp: Date.now(),
+          };
+        })
+        .catch((err) => {
+          return {
+            status: 400,
+            error: err,
+            timeStamp: Date.now(),
+          };
+        });
+    });
+}
+
+//Delete Profile
+export async function deleteProfile(handle: string, requestedUser: UserDoc) {
+  return await UserSchema.findOne({ handle: handle })
+    .populate("profile")
+    .then(async (user) => {
+      if (requestedUser._id.toString() !== user._id.toString()) {
+        return {
+          status: 400,
+          msg: "You cannot delete this profile",
+          timeStamp: Date.now(),
+        };
+      }
+      if (!user.profile) {
+        return {
+          status: 400,
+          msg: "Profile does not exists",
+          timeStamp: Date.now(),
+        };
+      }
+      return await user.profile
+        .delete()
+        .then((profile) => {
+          return {
+            status: 200,
+            profile: profile,
+            timeStamp: Date.now(),
+          };
+        })
+        .catch((err) => {
+          return {
+            status: 400,
+            msg: err,
+            timeStamp: Date.now(),
+          };
+        });
+    });
 }
