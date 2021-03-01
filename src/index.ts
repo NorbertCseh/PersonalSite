@@ -9,6 +9,7 @@ import keys from "./config/Keys";
 import userRoutes from "./routes/User";
 import postRoutes from "./routes/Post";
 import profileRoutes from "./routes/Profile";
+import projectRoutes from "./routes/Project";
 
 dotenv.config();
 
@@ -36,6 +37,7 @@ async function main() {
   app.use("/api/user", userRoutes);
   app.use("/api/post", postRoutes);
   app.use("/api/profile", profileRoutes);
+  app.use("/api/project", projectRoutes);
 
   await app.get("/", (_, res) => {
     res.send("Welcome");

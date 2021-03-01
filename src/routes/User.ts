@@ -9,7 +9,7 @@ import {
 } from "../middleware/User";
 
 import * as passport from "passport";
-import { UserDoc } from "documents/User";
+import { UserDoc } from "../documents/User";
 
 const router = express.Router();
 
@@ -32,9 +32,13 @@ router.post("/register", (req, res) => {
 
 // Login
 router.post("/login", (req, res) => {
-  return loginUser(req.body.email, req.body.password).then((response) => {
-    return res.status(response.status).json(response);
-  });
+  return loginUser(req.body.email, req.body.password)
+    .then((response) => {
+      return res.status(response.status).json(response);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
 });
 
 // Get all Users
@@ -42,9 +46,13 @@ router.get(
   "/users",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
-    return await getAllUsers().then(async (response) => {
-      return await res.status(response.status).json(response);
-    });
+    return await getAllUsers()
+      .then(async (response) => {
+        return await res.status(response.status).json(response);
+      })
+      .catch((err) => {
+        res.json(err);
+      });
   }
 );
 
@@ -53,9 +61,13 @@ router.get(
   "/:handle",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
-    return await getSingleUser(req.params.handle).then(async (response) => {
-      return await res.status(response.status).json(response);
-    });
+    return await getSingleUser(req.params.handle)
+      .then(async (response) => {
+        return await res.status(response.status).json(response);
+      })
+      .catch((err) => {
+        res.json(err);
+      });
   }
 );
 
@@ -64,13 +76,13 @@ router.put(
   "/:handle",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
-    return await editUser(
-      req.user as UserDoc,
-      req.body,
-      req.params.handle
-    ).then(async (response) => {
-      return await res.status(response.status).json(response);
-    });
+    return await editUser(req.user as UserDoc, req.body, req.params.handle)
+      .then(async (response) => {
+        return await res.status(response.status).json(response);
+      })
+      .catch((err) => {
+        res.json(err);
+      });
   }
 );
 
@@ -79,9 +91,13 @@ router.delete(
   "/:handle",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
-    return await deleteUser(req.user as UserDoc).then(async (response) => {
-      return await res.status(response.status).json(response);
-    });
+    return await deleteUser(req.user as UserDoc)
+      .then(async (response) => {
+        return await res.status(response.status).json(response);
+      })
+      .catch((err) => {
+        res.json(err);
+      });
   }
 );
 

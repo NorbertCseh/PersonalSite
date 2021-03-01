@@ -1,4 +1,4 @@
-import { UserDoc } from "documents/User";
+import { UserDoc } from "../documents/User";
 import * as express from "express";
 import {
   createProfile,

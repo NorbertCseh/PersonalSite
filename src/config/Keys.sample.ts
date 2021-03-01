@@ -1,3 +1,4 @@
 export default {
-	DB_URL: 'Your mongoDB URL',
+  DB_URL: "Your mongoDB URL",
+  secretOrKey: "Secret",
 };

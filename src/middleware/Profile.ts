@@ -2,8 +2,6 @@ import { ProfileDoc } from "documents/Profile";
 import { UserDoc } from "documents/User";
 import UserSchema from "../models/User";
 import ProfileSchema from "../models/Profile";
-import User from "../models/User";
-import { timeStamp } from "console";
 
 //Get single profile by handle
 export async function getProfileByUserHandle(handle: string) {
@@ -150,6 +148,7 @@ export async function updateProfile(
       if (fieldsToEdit.phone) {
         user.profile.phone = fieldsToEdit.phone;
       }
+      user.profile.lastUpdatedDate = Date.now();
       return await user.profile
         .save()
         .then((profile) => {
@@ -190,12 +189,25 @@ export async function deleteProfile(handle: string, requestedUser: UserDoc) {
       }
       return await user.profile
         .delete()
-        .then((profile) => {
-          return {
-            status: 200,
-            profile: profile,
-            timeStamp: Date.now(),
-          };
+        .then(async () => {
+          user.profile = null;
+          return await user
+            .save()
+            .then((user) => {
+              return {
+                status: 200,
+                msg: "Profile deleted",
+                user: user,
+                timeStamp: Date.now(),
+              };
+            })
+            .catch((err) => {
+              return {
+                status: 400,
+                msg: err,
+                timeStamp: Date.now(),
+              };
+            });
         })
         .catch((err) => {
           return {
