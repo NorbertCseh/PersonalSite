@@ -52,6 +52,11 @@ export async function createProfile(
     birthday: newProfile.birthday,
     address: newProfile.address,
     phone: newProfile.phone,
+    experiences: newProfile.experiences,
+    schools: newProfile.schools,
+    hobbies: newProfile.hobbies,
+    socials: newProfile.socials,
+    website: newProfile.website,
     createdDate: Date.now(),
     lastUpdatedDate: Date.now(),
   });
@@ -147,6 +152,21 @@ export async function updateProfile(
       }
       if (fieldsToEdit.phone) {
         user.profile.phone = fieldsToEdit.phone;
+      }
+      if (fieldsToEdit.experiences) {
+        user.profile.experiences = fieldsToEdit.experiences;
+      }
+      if (fieldsToEdit.schools) {
+        user.profile.schools = fieldsToEdit.schools;
+      }
+      if (fieldsToEdit.hobbies) {
+        user.profile.hobbies = fieldsToEdit.hobbies;
+      }
+      if (fieldsToEdit.socials) {
+        user.profile.socials = fieldsToEdit.socials;
+      }
+      if (fieldsToEdit.website) {
+        user.profile.website = fieldsToEdit.website;
       }
       user.profile.lastUpdatedDate = Date.now();
       return await user.profile

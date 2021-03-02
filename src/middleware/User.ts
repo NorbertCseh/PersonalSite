@@ -3,6 +3,7 @@ import * as argon2 from "argon2";
 import * as jwt from "jsonwebtoken";
 import keys from "../config/keys";
 import { UserDoc } from "../documents/User";
+import { responseJson } from "../helper/response";
 
 export async function createUser(
   name: string,
@@ -13,11 +14,7 @@ export async function createUser(
 ) {
   return await UserSchema.findOne({ email }).then(async (user) => {
     if (user) {
-      return {
-        status: 400,
-        error: "Email was already taken",
-        TimeStamp: Date.now(),
-      };
+      return responseJson(400, "Email was already taken");
     } else {
       let hashedPassword;
       try {
@@ -59,11 +56,7 @@ export async function loginUser(email: string, password: string) {
     .select("+password")
     .then(async (user) => {
       if (!user) {
-        return {
-          status: 400,
-          error: "Wrong email or password",
-          TimeStamp: Date.now(),
-        };
+        return responseJson(400, "Wrong email or password");
       } else {
         return await argon2
           .verify(user.password as string, password as string)
@@ -81,18 +74,13 @@ export async function loginUser(email: string, password: string) {
                   expiresIn: 3600,
                 }
               );
-              return {
-                status: 200,
-                msg: "Access granted, now you are logged in.",
-                token: "Bearer " + token,
-                TimeStamp: Date.now(),
-              };
+              return responseJson(
+                200,
+                "Access granted, now you are logged in.",
+                "Bearer " + token
+              );
             } else {
-              return {
-                status: 400,
-                error: "Wrong email or password",
-                TimeStamp: Date.now(),
-              };
+              return responseJson(400, "Wrong email or password");
             }
           });
       }
@@ -131,64 +119,40 @@ export async function editUser(
     }
     userToEdit.lastUpdatedDate = Date.now();
     userToEdit.save();
-    return {
-      status: 200,
-      msg: "User updated.",
-      user: userToEdit,
-      TimeStamp: Date.now(),
-    };
+    return responseJson(200, userToEdit);
   } else {
-    return {
-      status: 401,
-      error: "You cannot edit this user.",
-      TimeStamp: Date.now(),
-    };
+    return responseJson(401, "You cannot edit this user");
   }
 }
 
+//Get single user by handle
 export async function getSingleUser(handle: string) {
   return await UserSchema.findOne({ handle })
     .then((user) => {
       if (!user) {
-        return {
-          status: 400,
-          error: "This is not the page that you are looking for!",
-          TimeStamp: Date.now(),
-        };
+        return responseJson(400, "User does not exists");
       } else {
-        return {
-          status: 200,
-          user,
-          TimeStamp: Date.now(),
-        };
+        return responseJson(200, user);
       }
     })
     .catch((err) => {
-      return {
-        status: 400,
-        error: err,
-        TimeStamp: Date.now(),
-      };
+      return responseJson(200, err);
     });
 }
 
+//Get all users
 export async function getAllUsers() {
   return await UserSchema.find().then((users) => {
-    return {
-      status: 200,
-      users: users,
-      TimeStamp: Date.now(),
-    };
+    return responseJson(200, users);
   });
 }
 
 export async function deleteUser(userToDelete: UserDoc) {
-  return await UserSchema.findByIdAndDelete(userToDelete._id).then((res) => {
-    return {
-      status: 200,
-      msg: "UserDeleted",
-      response: res,
-      TimeStamp: Date.now(),
-    };
-  });
+  return await UserSchema.findByIdAndDelete(userToDelete._id)
+    .then(() => {
+      return responseJson(200, "User Deleted");
+    })
+    .catch((err) => {
+      return responseJson(400, err);
+    });
 }

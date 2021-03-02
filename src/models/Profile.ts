@@ -32,6 +32,36 @@ const ProfileSchema: Schema = new Schema({
     type: Number,
     required: false,
   },
+  experiences: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Experience",
+      required: false,
+    },
+  ],
+  schools: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "School",
+      required: false,
+    },
+  ],
+  hobbies: [
+    {
+      type: String,
+      required: false,
+    },
+  ],
+  socials: [
+    {
+      type: String,
+      required: false,
+    },
+  ],
+  website: {
+    type: String,
+    required: false,
+  },
   createdDate: {
     type: Date,
     required: true,
