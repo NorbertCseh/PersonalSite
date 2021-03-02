@@ -48,11 +48,6 @@ const UserSchema: Schema = new Schema({
       required: false,
     },
   ],
-  cv: {
-    type: Schema.Types.ObjectId,
-    required: false,
-    ref: "Cv",
-  },
   registerDate: {
     type: Date,
     required: true,
@@ -62,5 +57,11 @@ const UserSchema: Schema = new Schema({
     required: true,
   },
 });
+
+// TODO: I should create these here
+
+// UserSchema.statics.findWithCompany = function(id) {
+//   return this.findById(id).populate("company").exec()
+// }
 
 export default mongoose.model<UserDoc>("User", UserSchema);

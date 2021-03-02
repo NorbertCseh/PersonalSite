@@ -154,7 +154,6 @@ export async function deleteUser(handle, requestedUser: UserDoc) {
   if (!uTD) {
     return responseJson(404, "Cannot find user");
   }
-
   if (JSON.stringify(reqUser._id) === JSON.stringify(uTD._id)) {
     await uTD.delete();
     return responseJson(200, "User deleted");

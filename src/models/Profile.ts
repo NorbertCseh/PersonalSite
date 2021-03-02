@@ -34,16 +34,62 @@ const ProfileSchema: Schema = new Schema({
   },
   experiences: [
     {
-      type: Schema.Types.ObjectId,
-      ref: "Experience",
-      required: false,
+      experienceName: {
+        type: String,
+        required: true,
+      },
+      experienceFrom: {
+        type: String,
+        required: true,
+      },
+      experienceTo: {
+        type: String,
+        required: false,
+      },
+      experienceDescription: {
+        type: String,
+        required: false,
+      },
+      createdDate: {
+        type: String,
+        required: true,
+      },
+      lastUpdatedDate: {
+        type: String,
+        required: true,
+      },
     },
   ],
   schools: [
     {
-      type: Schema.Types.ObjectId,
-      ref: "School",
-      required: false,
+      schoolName: {
+        type: String,
+        required: true,
+      },
+      degree: {
+        type: String,
+        required: true,
+      },
+      schoolFrom: {
+        type: String,
+        required: true,
+      },
+      schoolTo: {
+        type: String,
+        required: false,
+      },
+      schoolDescription: {
+        type: String,
+        required: false,
+      },
+      createdDate: {
+        type: String,
+        required: true,
+      },
+      lastUpdatedDate: {
+        type: String,
+        required: true,
+      },
     },
   ],
   hobbies: [
@@ -52,13 +98,29 @@ const ProfileSchema: Schema = new Schema({
       required: false,
     },
   ],
-  socials: [
-    {
+  social: {
+    youtube: {
       type: String,
       required: false,
     },
-  ],
-  website: {
+    twitter: {
+      type: String,
+      required: false,
+    },
+    facebook: {
+      type: String,
+      required: false,
+    },
+    linkedin: {
+      type: String,
+      required: false,
+    },
+    instagram: {
+      type: String,
+      required: false,
+    },
+  },
+  personalWebsite: {
     type: String,
     required: false,
   },

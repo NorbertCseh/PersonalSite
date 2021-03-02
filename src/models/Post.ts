@@ -18,9 +18,28 @@ const PostSchema: Schema = new Schema({
   },
   comments: [
     {
-      type: Schema.Types.ObjectId,
-      ref: "Comment",
-      required: false,
+      user: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+      post: {
+        type: Schema.Types.ObjectId,
+        ref: "Post",
+        required: true,
+      },
+      commentBody: {
+        type: String,
+        required: true,
+      },
+      createdDate: {
+        type: Date,
+        required: true,
+      },
+      lastUpdatedDate: {
+        type: Date,
+        required: true,
+      },
     },
   ],
   createdDate: {
