@@ -91,7 +91,7 @@ router.delete(
   "/:handle",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
-    return await deleteUser(req.user as UserDoc)
+    return await deleteUser(req.params.handle, req.user as UserDoc)
       .then(async (response) => {
         return await res.status(response.status).json(response);
       })

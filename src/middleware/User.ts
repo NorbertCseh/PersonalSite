@@ -4,6 +4,7 @@ import * as jwt from "jsonwebtoken";
 import keys from "../config/keys";
 import { UserDoc } from "../documents/User";
 import { responseJson } from "../helper/response";
+import User from "../models/User";
 
 export async function createUser(
   name: string,
@@ -147,12 +148,17 @@ export async function getAllUsers() {
   });
 }
 
-export async function deleteUser(userToDelete: UserDoc) {
-  return await UserSchema.findByIdAndDelete(userToDelete._id)
-    .then(() => {
-      return responseJson(200, "User Deleted");
-    })
-    .catch((err) => {
-      return responseJson(400, err);
-    });
+export async function deleteUser(handle, requestedUser: UserDoc) {
+  const reqUser = await UserSchema.findById(requestedUser._id);
+  const uTD = await UserSchema.findOne({ handle: handle });
+  if (!uTD) {
+    return responseJson(404, "Cannot find user");
+  }
+
+  if (JSON.stringify(reqUser._id) === JSON.stringify(uTD._id)) {
+    await uTD.delete();
+    return responseJson(200, "User deleted");
+  } else {
+    return responseJson(400, "You cannot delete this user");
+  }
 }
