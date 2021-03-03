@@ -1,3 +1,4 @@
+import * as moment from "moment";
 import { ProjectDoc } from "../documents/Project";
 import { UserDoc } from "../documents/User";
 import UserSchema from "../models/User";
@@ -13,7 +14,7 @@ export async function createProject(
     return {
       status: 400,
       msg: "Name cannot be empty",
-      timeStamp: Date.now(),
+      timeStamp: moment(),
     };
   } else {
     const newProject = new ProjectSchema({
@@ -22,8 +23,8 @@ export async function createProject(
       deployedURL: project.deployedURL,
       gitURL: project.gitURL,
       imageURL: project.imageURL,
-      creationDate: Date.now(),
-      lastUpdatedDate: Date.now(),
+      creationDate: moment(),
+      lastUpdatedDate: moment(),
     });
     const user = await UserSchema.findById(requestedUser.id);
     await user.projects.push(newProject);
@@ -37,13 +38,13 @@ export async function createProject(
       return {
         status: 400,
         msg: error,
-        timeStamp: Date.now(),
+        timeStamp: moment(),
       };
     }
     return {
       status: 201,
       project: newProject,
-      timeStamp: Date.now(),
+      timeStamp: moment(),
     };
   }
 }
@@ -57,13 +58,13 @@ export async function getProject(project_id: string) {
         return {
           status: 404,
           msg: "Project not found",
-          timeStamp: Date.now(),
+          timeStamp: moment(),
         };
       } else {
         return {
           status: 200,
           project: project,
-          timeStamp: Date.now(),
+          timeStamp: moment(),
         };
       }
     });
@@ -76,13 +77,13 @@ export async function getProjects() {
       return {
         status: 404,
         msg: "No projects found",
-        timeStamp: Date.now(),
+        timeStamp: moment(),
       };
     } else {
       return {
         status: 200,
         project: projects,
-        timeStamp: Date.now(),
+        timeStamp: moment(),
       };
     }
   });
@@ -97,13 +98,13 @@ export async function getProjectsFromOneUser(handle: string) {
         return {
           status: 404,
           msg: "No user found",
-          timeStamp: Date.now(),
+          timeStamp: moment(),
         };
       } else {
         return {
           status: 200,
           projects: user,
-          timeStamp: Date.now(),
+          timeStamp: moment(),
         };
       }
     });
@@ -120,7 +121,7 @@ export async function updateProject(
     return {
       status: 400,
       msg: "No fields to edit",
-      timeStamp: Date.now(),
+      timeStamp: moment(),
     };
   }
   const reqUser = await UserSchema.findById(requestedUser.id);
@@ -130,14 +131,14 @@ export async function updateProject(
     return {
       status: 404,
       msg: "Cannot find project",
-      timeStamp: Date.now(),
+      timeStamp: moment(),
     };
   }
   if (reqUser._id.toString() !== project.user.toString()) {
     return {
       status: 404,
       msg: "You cannot edit this project",
-      timeStamp: Date.now(),
+      timeStamp: moment(),
     };
   }
   if (fieldToUpdate.name) {
@@ -152,7 +153,7 @@ export async function updateProject(
   if (fieldToUpdate.imageURL) {
     project.imageURL = fieldToUpdate.imageURL;
   }
-  project.lastUpdatedDate = Date.now();
+  project.lastUpdatedDate = moment();
   await project.save().catch((err) => {
     error.push(err);
   });
@@ -160,13 +161,13 @@ export async function updateProject(
     return {
       status: 400,
       error: error,
-      timeStamp: Date.now(),
+      timeStamp: moment(),
     };
   }
   return {
     status: 200,
     project: project,
-    timeStamp: Date.now(),
+    timeStamp: moment(),
   };
 }
 
@@ -179,7 +180,7 @@ export async function deleteProject(
     return {
       status: 404,
       msg: "Cannot find project",
-      timeStamp: Date.now(),
+      timeStamp: moment(),
     };
   }
   const reqUser = await UserSchema.findById(requestedUser.id);
@@ -187,7 +188,7 @@ export async function deleteProject(
     return {
       status: 404,
       msg: "You cannot delete this project",
-      timeStamp: Date.now(),
+      timeStamp: moment(),
     };
   }
   await UserSchema.findById(project.user._id).updateOne({
@@ -197,6 +198,6 @@ export async function deleteProject(
   return {
     status: 200,
     msg: "Deleted",
-    timeStamp: Date.now(),
+    timeStamp: moment(),
   };
 }

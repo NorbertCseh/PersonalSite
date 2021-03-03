@@ -1,10 +1,10 @@
 import UserSchema from "../models/User";
 import * as argon2 from "argon2";
 import * as jwt from "jsonwebtoken";
+import * as moment from "moment";
 import keys from "../config/keys";
 import { UserDoc } from "../documents/User";
 import { responseJson } from "../helper/response";
-import User from "../models/User";
 
 export async function createUser(
   name: string,
@@ -30,8 +30,8 @@ export async function createUser(
         avatar,
         password: hashedPassword,
         isAdmin: false,
-        registerDate: Date.now(),
-        lastUpdatedDate: Date.now(),
+        registerDate: moment(),
+        lastUpdatedDate: moment(),
       });
 
       return await newUser
@@ -40,7 +40,7 @@ export async function createUser(
           return {
             status: 201,
             user: user,
-            TimeStamp: Date.now(),
+            timeStamp: moment(),
           };
         })
         .catch((err) => {
@@ -118,7 +118,7 @@ export async function editUser(
     if (fieldsToEdit.password) {
       userToEdit.password = fieldsToEdit.password;
     }
-    userToEdit.lastUpdatedDate = Date.now();
+    userToEdit.lastUpdatedDate = moment();
     userToEdit.save();
     return responseJson(200, userToEdit);
   } else {

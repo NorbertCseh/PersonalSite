@@ -1,3 +1,4 @@
+import { Moment } from "moment";
 import * as mongoose from "mongoose";
 import { UserDoc } from "./User";
 
@@ -8,6 +9,6 @@ export interface ProjectDoc extends mongoose.Document {
   deployedURL: string;
   gitURL: string;
   imageURL: string;
-  creationDate: number;
-  lastUpdatedDate: number;
+  creationDate: Moment;
+  lastUpdatedDate: Moment;
 }

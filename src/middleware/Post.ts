@@ -1,8 +1,11 @@
-import { PostDoc } from "documents/Post";
-import { UserDoc } from "documents/User";
+import * as moment from "moment";
+import { PostDoc } from "../documents/Post";
+import { UserDoc } from "../documents/User";
 import PostSchema from "../models/Post";
 import UserSchema from "../models/User";
+import { responseJson } from "../helper/response";
 
+//Create post
 export async function createPost(
   author: UserDoc,
   postTitle: String,
@@ -14,8 +17,8 @@ export async function createPost(
     author: author._id,
     postTitle: postTitle,
     postBody: postBody,
-    createdDate: Date.now(),
-    lastUpdatedDate: Date.now(),
+    createdDate: moment(),
+    lastUpdatedDate: moment(),
   });
   await UserSchema.findById(author._id).then(async (user) => {
     //Push the post id to the User's posts array
@@ -33,18 +36,19 @@ export async function createPost(
     return {
       status: 400,
       error: error,
-      timeStamp: Date.now(),
+      timeStamp: moment(),
     };
   } else {
     return {
       status: 201,
       post: newPost,
-      timeStamp: Date.now(),
+      timeStamp: moment(),
       user: author,
     };
   }
 }
 
+//Get single post with comments
 export async function getSinglePost(post_id: string) {
   return await PostSchema.findById(post_id)
     .then((post) => {
@@ -52,31 +56,33 @@ export async function getSinglePost(post_id: string) {
         return {
           status: 404,
           msg: "Post does not exists",
-          timeStamp: Date.now(),
+          timeStamp: moment(),
         };
       }
       return {
         status: 200,
         post: post,
-        timeStamp: Date.now(),
+        timeStamp: moment(),
       };
     })
     .catch((err) => {
       return {
         status: 404,
         error: err,
-        timeStamp: Date.now(),
+        timeStamp: moment(),
       };
     });
 }
 
+//Get all posts without the comments
 export async function getAllPosts() {
   return await PostSchema.find()
+    .populate("comment")
     .then((posts) => {
       return {
         status: 200,
         posts: posts,
-        timeStamp: Date.now(),
+        timeStamp: moment(),
       };
     })
     .catch((err) => {
@@ -85,11 +91,12 @@ export async function getAllPosts() {
       return {
         status: 200,
         error: err,
-        timeStamp: Date.now(),
+        timeStamp: moment(),
       };
     });
 }
 
+//Update post
 export async function updatePost(
   post_id: string,
   fieldsToEdit: PostDoc,
@@ -103,7 +110,7 @@ export async function updatePost(
         return {
           status: 403,
           msg: "No post found",
-          timeStamp: Date.now(),
+          timeStamp: moment(),
         };
       }
       if (post.author._id.toString() !== requestedUser._id.toString()) {
@@ -113,7 +120,7 @@ export async function updatePost(
           return {
             status: 304,
             msg: "Empty fields",
-            timeStamp: Date.now(),
+            timeStamp: moment(),
           };
         }
         if (fieldsToEdit.postTitle) {
@@ -129,20 +136,21 @@ export async function updatePost(
               status: 204,
               msg: "Post updated",
               post: editedPost,
-              timeStamp: Date.now(),
+              timeStamp: moment(),
             };
           })
           .catch((err) => {
             return {
               status: 400,
               error: err,
-              timeStamp: Date.now(),
+              timeStamp: moment(),
             };
           });
       }
     });
 }
 
+//Delete post
 export async function deletePost(post_id: string, requestedUser: UserDoc) {
   return await PostSchema.findById(post_id)
     .populate("author")
@@ -151,7 +159,7 @@ export async function deletePost(post_id: string, requestedUser: UserDoc) {
         return {
           status: 404,
           error: "Cannot find post",
-          timeStamp: Date.now(),
+          timeStamp: moment(),
         };
       }
 
@@ -159,7 +167,7 @@ export async function deletePost(post_id: string, requestedUser: UserDoc) {
         return {
           status: 400,
           error: "You cannot delete this post",
-          timeStamp: Date.now(),
+          timeStamp: moment(),
         };
       } else {
         //Delete the id from User's Posts array
@@ -170,8 +178,32 @@ export async function deletePost(post_id: string, requestedUser: UserDoc) {
         return {
           status: 200,
           msg: "Post deleted",
-          timeStamp: Date.now(),
+          timeStamp: moment(),
         };
       }
     });
+}
+
+//Add comment to post
+export async function createComment(
+  post_id: String,
+  requestedUser: UserDoc,
+  commentBody: string
+) {
+  if (!commentBody) {
+    return await responseJson(400, "Comment is empty");
+  }
+  const post: PostDoc = await PostSchema.findById(post_id);
+  if (!post) {
+    return await responseJson(404, "Cannot find user");
+  }
+  const newComment = {
+    user: requestedUser,
+    commentBody: commentBody,
+    createdDate: moment(),
+    lastUpdatedDate: moment(),
+  };
+  await post.comments.push(newComment);
+  await post.save();
+  return await responseJson(201, await post.populate("comments"));
 }

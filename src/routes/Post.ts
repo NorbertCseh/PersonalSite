@@ -6,6 +6,7 @@ import {
   getAllPosts,
   getSinglePost,
   updatePost,
+  createComment,
 } from "../middleware/Post";
 import { UserDoc } from "../documents/User";
 
@@ -90,3 +91,21 @@ router.delete(
   }
 );
 export default router;
+
+router.post(
+  "/:post_id/comment",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    return createComment(
+      req.params.post_id,
+      req.user as UserDoc,
+      req.body.commentBody
+    )
+      .then((response) => {
+        return res.status(response.status).json(response);
+      })
+      .catch((err) => {
+        return res.json(err);
+      });
+  }
+);

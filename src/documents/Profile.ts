@@ -1,3 +1,4 @@
+import { Moment } from "moment";
 import * as mongoose from "mongoose";
 import { UserDoc } from "./User";
 
@@ -7,7 +8,7 @@ export interface ProfileDoc extends mongoose.Document {
   firstName: string;
   middleName: string;
   lastName: string;
-  birthday: number;
+  birthday: Moment;
   address: number;
   phone: number;
   experiences: string[];
@@ -15,6 +16,6 @@ export interface ProfileDoc extends mongoose.Document {
   hobbies: string[];
   socials: string[];
   website: string;
-  createdDate: number;
-  lastUpdatedDate: number;
+  createdDate: Moment;
+  lastUpdatedDate: Moment;
 }

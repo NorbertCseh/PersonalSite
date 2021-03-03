@@ -1,3 +1,4 @@
+import { Moment } from "moment";
 import * as mongoose from "mongoose";
 import { PostDoc } from "./Post";
 import { ProfileDoc } from "./Profile";
@@ -14,6 +15,6 @@ export interface UserDoc extends mongoose.Document {
   profile: ProfileDoc;
   projects: ProjectDoc[];
   posts: PostDoc[];
-  registerDate: number;
-  lastUpdatedDate: number;
+  registerDate: Moment;
+  lastUpdatedDate: Moment;
 }
