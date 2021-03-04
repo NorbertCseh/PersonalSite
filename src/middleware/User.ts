@@ -37,14 +37,10 @@ export async function createUser(
       return await newUser
         .save()
         .then((user) => {
-          return {
-            status: 201,
-            user: user,
-            timeStamp: moment(),
-          };
+          return responseJson(201, user);
         })
         .catch((err) => {
-          return { status: 400, error: err };
+          return responseJson(400, err);
         });
     }
   });

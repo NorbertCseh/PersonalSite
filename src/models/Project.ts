@@ -16,7 +16,7 @@ const ProjectSchema: Schema = new Schema({
     type: String,
     required: false,
   },
-  gitURL: {
+  sourceURL: {
     type: String,
     required: false,
   },

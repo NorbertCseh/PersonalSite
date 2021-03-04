@@ -7,7 +7,7 @@ export interface ProjectDoc extends mongoose.Document {
   user: UserDoc;
   name: string;
   deployedURL: string;
-  gitURL: string;
+  sourceURL: string;
   imageURL: string;
   creationDate: Moment;
   lastUpdatedDate: Moment;

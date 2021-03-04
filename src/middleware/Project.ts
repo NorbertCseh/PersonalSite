@@ -3,6 +3,7 @@ import { ProjectDoc } from "../documents/Project";
 import { UserDoc } from "../documents/User";
 import UserSchema from "../models/User";
 import ProjectSchema from "../models/Project";
+import { responseJson } from "../helper/response";
 
 //Create project
 export async function createProject(
@@ -11,17 +12,13 @@ export async function createProject(
 ) {
   let error: Array<string>;
   if (!project.name) {
-    return {
-      status: 400,
-      msg: "Name cannot be empty",
-      timeStamp: moment(),
-    };
+    return responseJson(400, "Name cannot be empty");
   } else {
     const newProject = new ProjectSchema({
       user: requestedUser,
       name: project.name,
       deployedURL: project.deployedURL,
-      gitURL: project.gitURL,
+      sourceURL: project.sourceURL,
       imageURL: project.imageURL,
       creationDate: moment(),
       lastUpdatedDate: moment(),
@@ -35,17 +32,9 @@ export async function createProject(
       error.push(err);
     });
     if (error) {
-      return {
-        status: 400,
-        msg: error,
-        timeStamp: moment(),
-      };
+      return responseJson(400, error);
     }
-    return {
-      status: 201,
-      project: newProject,
-      timeStamp: moment(),
-    };
+    return responseJson(201, newProject);
   }
 }
 
@@ -53,38 +42,22 @@ export async function createProject(
 export async function getProject(project_id: string) {
   return await ProjectSchema.findById(project_id)
     .populate("user")
-    .then((project) => {
+    .then(async (project) => {
       if (!project) {
-        return {
-          status: 404,
-          msg: "Project not found",
-          timeStamp: moment(),
-        };
+        return await responseJson(404, "Cannot find project");
       } else {
-        return {
-          status: 200,
-          project: project,
-          timeStamp: moment(),
-        };
+        return responseJson(200, project);
       }
     });
 }
 
 //Get All project
 export async function getProjects() {
-  return await ProjectSchema.find().then((projects) => {
+  return await ProjectSchema.find().then(async (projects) => {
     if (!projects) {
-      return {
-        status: 404,
-        msg: "No projects found",
-        timeStamp: moment(),
-      };
+      return await responseJson(400, "No project found");
     } else {
-      return {
-        status: 200,
-        project: projects,
-        timeStamp: moment(),
-      };
+      return responseJson(200, projects);
     }
   });
 }
@@ -93,19 +66,11 @@ export async function getProjects() {
 export async function getProjectsFromOneUser(handle: string) {
   return await UserSchema.findOne({ handle: handle })
     .populate("projects")
-    .then((user) => {
+    .then(async (user) => {
       if (!user) {
-        return {
-          status: 404,
-          msg: "No user found",
-          timeStamp: moment(),
-        };
+        return await responseJson(404, "User not found");
       } else {
-        return {
-          status: 200,
-          projects: user,
-          timeStamp: moment(),
-        };
+        return responseJson(200, user);
       }
     });
 }
@@ -118,28 +83,16 @@ export async function updateProject(
 ) {
   let error: Array<string>;
   if (Object.keys(fieldToUpdate).length === 0) {
-    return {
-      status: 400,
-      msg: "No fields to edit",
-      timeStamp: moment(),
-    };
+    return responseJson(400, "No field to edit");
   }
   const reqUser = await UserSchema.findById(requestedUser.id);
 
   const project = await ProjectSchema.findById(project_id);
   if (!project) {
-    return {
-      status: 404,
-      msg: "Cannot find project",
-      timeStamp: moment(),
-    };
+    return responseJson(400, "Cannot find project");
   }
   if (reqUser._id.toString() !== project.user.toString()) {
-    return {
-      status: 404,
-      msg: "You cannot edit this project",
-      timeStamp: moment(),
-    };
+    return responseJson(404, "You cannot edit this project");
   }
   if (fieldToUpdate.name) {
     project.name = fieldToUpdate.name;
@@ -147,8 +100,8 @@ export async function updateProject(
   if (fieldToUpdate.deployedURL) {
     project.deployedURL = fieldToUpdate.deployedURL;
   }
-  if (fieldToUpdate.gitURL) {
-    project.gitURL = fieldToUpdate.gitURL;
+  if (fieldToUpdate.sourceURL) {
+    project.sourceURL = fieldToUpdate.sourceURL;
   }
   if (fieldToUpdate.imageURL) {
     project.imageURL = fieldToUpdate.imageURL;
@@ -158,17 +111,9 @@ export async function updateProject(
     error.push(err);
   });
   if (error) {
-    return {
-      status: 400,
-      error: error,
-      timeStamp: moment(),
-    };
+    return responseJson(400, error);
   }
-  return {
-    status: 200,
-    project: project,
-    timeStamp: moment(),
-  };
+  return responseJson(200, project);
 }
 
 export async function deleteProject(
@@ -177,27 +122,15 @@ export async function deleteProject(
 ) {
   const project = await ProjectSchema.findById(project_id);
   if (!project) {
-    return {
-      status: 404,
-      msg: "Cannot find project",
-      timeStamp: moment(),
-    };
+    return responseJson(404, "Cannot find project");
   }
   const reqUser = await UserSchema.findById(requestedUser.id);
   if (reqUser._id.toString() !== project.user.toString()) {
-    return {
-      status: 404,
-      msg: "You cannot delete this project",
-      timeStamp: moment(),
-    };
+    return responseJson(400, "You cannot delete this project");
   }
   await UserSchema.findById(project.user._id).updateOne({
     $pull: { projects: { $in: project._id } },
   });
   await project.delete();
-  return {
-    status: 200,
-    msg: "Deleted",
-    timeStamp: moment(),
-  };
+  return responseJson(200, "Project deleted");
 }

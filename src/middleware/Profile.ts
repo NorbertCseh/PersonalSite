@@ -3,38 +3,23 @@ import { UserDoc } from "documents/User";
 import UserSchema from "../models/User";
 import ProfileSchema from "../models/Profile";
 import moment = require("moment");
+import { responseJson } from "../helper/response";
 
 //Get single profile by handle
 export async function getProfileByUserHandle(handle: string) {
   return await UserSchema.findOne({ handle: handle })
     .populate("profile")
-    .then((user) => {
+    .then(async (user) => {
       if (!user) {
-        return {
-          status: 404,
-          msg: "Cannot find user",
-          timeStamp: moment(),
-        };
+        return await responseJson(404, "Cannot find user");
       }
       if (!user.profile) {
-        return {
-          status: 404,
-          msg: "No profile found for this user",
-          timeStamp: moment(),
-        };
+        return responseJson(404, "Profile not found");
       }
-      return {
-        status: 200,
-        profile: user,
-        timeStamp: moment(),
-      };
+      return responseJson(200, user);
     })
     .catch((err) => {
-      return {
-        status: 400,
-        error: err,
-        timeStamp: moment(),
-      };
+      return responseJson(400, err);
     });
 }
 
@@ -61,27 +46,16 @@ export async function createProfile(
     createdDate: moment(),
     lastUpdatedDate: moment(),
   });
+  //TODO: Rework pls
   return await UserSchema.findOne({ handle: handle }).then(async (user) => {
     if (!user) {
-      return {
-        status: 400,
-        msg: "User does not exists",
-        timeStamp: moment(),
-      };
+      return responseJson(404, "User not found");
     }
     if (user._id.toString() !== requestedUser._id.toString()) {
-      return {
-        status: 400,
-        msg: "You cannot create profile for someone else",
-        timeStamp: moment(),
-      };
+      return responseJson(400, "Name cannot be empty");
     }
     if (user.profile) {
-      return {
-        status: 400,
-        msg: "You already have a profile",
-        timeStamp: moment(),
-      };
+      return responseJson(400, "Cannot add profile");
     }
     user.profile = profile;
     await user.save().catch((err) => {
@@ -91,22 +65,14 @@ export async function createProfile(
       error = err;
     });
     if (error) {
-      return {
-        status: 400,
-        error: error,
-        timeStamp: moment(),
-      };
+      return responseJson(400, error);
     } else {
-      return {
-        status: 201,
-        profile: profile,
-        timeStamp: moment(),
-      };
+      return responseJson(201, profile);
     }
   });
 }
 
-//Edit profile
+//Edit profile REWORKLDPLS
 export async function updateProfile(
   handle: string,
   requestedUser: UserDoc,
@@ -116,25 +82,13 @@ export async function updateProfile(
     .populate("profile")
     .then(async (user) => {
       if (requestedUser._id.toString() !== user._id.toString()) {
-        return {
-          status: 400,
-          msg: "You cannot edit this profile",
-          timeStamp: moment(),
-        };
+        return responseJson(400, "Cannot edit this profile");
       }
       if (!user.profile) {
-        return {
-          status: 400,
-          msg: "No profile found for this user",
-          timeStamp: moment(),
-        };
+        return responseJson(404, "Profile not found");
       }
       if (Object.keys(fieldsToEdit).length === 0) {
-        return {
-          status: 400,
-          msg: "No fields to edit",
-          timeStamp: moment(),
-        };
+        return responseJson(400, "No field to edit");
       }
       if (fieldsToEdit.firstName) {
         user.profile.firstName = fieldsToEdit.firstName;
@@ -173,40 +127,24 @@ export async function updateProfile(
       return await user.profile
         .save()
         .then((profile) => {
-          return {
-            status: 200,
-            profile: profile,
-            timeStamp: moment(),
-          };
+          return responseJson(200, profile);
         })
         .catch((err) => {
-          return {
-            status: 400,
-            error: err,
-            timeStamp: moment(),
-          };
+          return responseJson(400, err);
         });
     });
 }
 
-//Delete Profile
+//Delete Profile REWORK
 export async function deleteProfile(handle: string, requestedUser: UserDoc) {
   return await UserSchema.findOne({ handle: handle })
     .populate("profile")
     .then(async (user) => {
       if (requestedUser._id.toString() !== user._id.toString()) {
-        return {
-          status: 400,
-          msg: "You cannot delete this profile",
-          timeStamp: moment(),
-        };
+        return responseJson(400, "Cannot delete profile");
       }
       if (!user.profile) {
-        return {
-          status: 400,
-          msg: "Profile does not exists",
-          timeStamp: moment(),
-        };
+        return responseJson(404, "Profile does not exists");
       }
       return await user.profile
         .delete()
@@ -214,28 +152,15 @@ export async function deleteProfile(handle: string, requestedUser: UserDoc) {
           user.profile = null;
           return await user
             .save()
-            .then((user) => {
-              return {
-                status: 200,
-                msg: "Profile deleted",
-                user: user,
-                timeStamp: moment(),
-              };
+            .then(() => {
+              return responseJson(200, "User deleted");
             })
             .catch((err) => {
-              return {
-                status: 400,
-                msg: err,
-                timeStamp: moment(),
-              };
+              return responseJson(400, err);
             });
         })
         .catch((err) => {
-          return {
-            status: 400,
-            msg: err,
-            timeStamp: moment(),
-          };
+          return responseJson(400, err);
         });
     });
 }

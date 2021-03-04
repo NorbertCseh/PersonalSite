@@ -33,44 +33,23 @@ export async function createPost(
     });
   });
   if (error) {
-    return {
-      status: 400,
-      error: error,
-      timeStamp: moment(),
-    };
+    return responseJson(400, error);
   } else {
-    return {
-      status: 201,
-      post: newPost,
-      timeStamp: moment(),
-      user: author,
-    };
+    return responseJson(201, newPost);
   }
 }
 
 //Get single post with comments
 export async function getSinglePost(post_id: string) {
   return await PostSchema.findById(post_id)
-    .then((post) => {
+    .then(async (post) => {
       if (!post) {
-        return {
-          status: 404,
-          msg: "Post does not exists",
-          timeStamp: moment(),
-        };
+        return responseJson(404, "Cannot find post");
       }
-      return {
-        status: 200,
-        post: post,
-        timeStamp: moment(),
-      };
+      return responseJson(200, post);
     })
     .catch((err) => {
-      return {
-        status: 404,
-        error: err,
-        timeStamp: moment(),
-      };
+      return responseJson(400, err);
     });
 }
 
@@ -79,20 +58,10 @@ export async function getAllPosts() {
   return await PostSchema.find()
     .populate("comment")
     .then((posts) => {
-      return {
-        status: 200,
-        posts: posts,
-        timeStamp: moment(),
-      };
+      return responseJson(200, posts);
     })
     .catch((err) => {
-      console.log(err);
-
-      return {
-        status: 200,
-        error: err,
-        timeStamp: moment(),
-      };
+      return responseJson(400, err);
     });
 }
 
@@ -107,21 +76,13 @@ export async function updatePost(
     .populate("author")
     .then(async (post) => {
       if (!post) {
-        return {
-          status: 403,
-          msg: "No post found",
-          timeStamp: moment(),
-        };
+        return responseJson(404, "Post not found");
       }
       if (post.author._id.toString() !== requestedUser._id.toString()) {
-        error = "You cannot edit this post";
+        return responseJson(400, "You cannot edit this user");
       } else {
         if (Object.keys(fieldsToEdit).length === 0) {
-          return {
-            status: 304,
-            msg: "Empty fields",
-            timeStamp: moment(),
-          };
+          return responseJson(400, "No field to edit");
         }
         if (fieldsToEdit.postTitle) {
           post.postTitle = fieldsToEdit.postTitle;
@@ -132,19 +93,10 @@ export async function updatePost(
         return await post
           .save()
           .then((editedPost) => {
-            return {
-              status: 204,
-              msg: "Post updated",
-              post: editedPost,
-              timeStamp: moment(),
-            };
+            return responseJson(200, editedPost);
           })
           .catch((err) => {
-            return {
-              status: 400,
-              error: err,
-              timeStamp: moment(),
-            };
+            return responseJson(400, err);
           });
       }
     });
@@ -156,30 +108,18 @@ export async function deletePost(post_id: string, requestedUser: UserDoc) {
     .populate("author")
     .then(async (post) => {
       if (!post) {
-        return {
-          status: 404,
-          error: "Cannot find post",
-          timeStamp: moment(),
-        };
+        return responseJson(404, "Cannot find post");
       }
 
       if (post.author._id.toString() !== requestedUser._id.toString()) {
-        return {
-          status: 400,
-          error: "You cannot delete this post",
-          timeStamp: moment(),
-        };
+        return responseJson(400, "You cannot edit this user");
       } else {
         //Delete the id from User's Posts array
         await UserSchema.findById(post.author._id).updateOne({
           $pull: { posts: { $in: post._id } },
         });
         await post.delete();
-        return {
-          status: 200,
-          msg: "Post deleted",
-          timeStamp: moment(),
-        };
+        return responseJson(200, "Post deleted");
       }
     });
 }

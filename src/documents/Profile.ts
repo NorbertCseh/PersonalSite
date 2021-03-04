@@ -9,12 +9,38 @@ export interface ProfileDoc extends mongoose.Document {
   middleName: string;
   lastName: string;
   birthday: Moment;
-  address: number;
+  address: string;
   phone: number;
-  experiences: string[];
-  schools: string[];
+  experiences: [
+    {
+      experienceName: string;
+      experienceFrom: Moment;
+      experienceTo: Moment;
+      experienceDescription: String;
+      createdDate: Moment;
+      lastUpdatedDate: Moment;
+    }
+  ];
+  schools: [
+    {
+      schoolName: string;
+      degree: string;
+      schoolFrom: Moment;
+      schoolTo: Moment;
+      schoolDescription: String;
+      createdDate: Moment;
+      lastUpdatedDate: Moment;
+    }
+  ];
   hobbies: string[];
-  socials: string[];
+  socials: {
+    github: string;
+    youtube: string;
+    twitter: string;
+    facebook: string;
+    linkedin: string;
+    instagram: string;
+  };
   website: string;
   createdDate: Moment;
   lastUpdatedDate: Moment;
