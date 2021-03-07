@@ -2,6 +2,7 @@ import * as express from "express";
 import * as mongoose from "mongoose";
 import * as dotenv from "dotenv";
 import * as bodyParser from "body-parser";
+import * as cors from "cors";
 import * as passport from "passport";
 
 import keys from "./config/Keys";
@@ -15,6 +16,8 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT;
+
+app.use(cors());
 
 async function main() {
   await mongoose
