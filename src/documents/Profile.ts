@@ -16,7 +16,7 @@ export interface ProfileDoc extends mongoose.Document {
       experienceName: string;
       experienceFrom: Moment;
       experienceTo: Moment;
-      experienceDescription: String;
+      experienceDescription: string;
       createdDate: Moment;
       lastUpdatedDate: Moment;
     }
@@ -27,7 +27,7 @@ export interface ProfileDoc extends mongoose.Document {
       degree: string;
       schoolFrom: Moment;
       schoolTo: Moment;
-      schoolDescription: String;
+      schoolDescription: string;
       createdDate: Moment;
       lastUpdatedDate: Moment;
     }

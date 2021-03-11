@@ -5,23 +5,23 @@ import PostSchema from "../models/Post";
 import UserSchema from "../models/User";
 import { responseJson } from "../helper/response";
 
-//Create post
+// Create post
 export async function createPost(
   author: UserDoc,
-  postTitle: String,
-  postBody: String
+  postTitle: string,
+  postBody: string
 ) {
   let error;
 
   const newPost = new PostSchema({
     author: author._id,
-    postTitle: postTitle,
-    postBody: postBody,
+    postTitle,
+    postBody,
     createdDate: moment(),
     lastUpdatedDate: moment(),
   });
   await UserSchema.findById(author._id).then(async (user) => {
-    //Push the post id to the User's posts array
+    // Push the post id to the User's posts array
     await user.posts.push(newPost);
 
     await user.save().catch((err) => {
@@ -39,9 +39,9 @@ export async function createPost(
   }
 }
 
-//Get single post with comments
-export async function getSinglePost(post_id: string) {
-  return await PostSchema.findById(post_id)
+// Get single post with comments
+export async function getSinglePost(postId: string) {
+  return await PostSchema.findById(postId)
     .then(async (post) => {
       if (!post) {
         return responseJson(404, "Cannot find post");
@@ -53,7 +53,7 @@ export async function getSinglePost(post_id: string) {
     });
 }
 
-//Get all posts without the comments
+// Get all posts without the comments
 export async function getAllPosts() {
   return await PostSchema.find()
     .populate("comment")
@@ -65,14 +65,13 @@ export async function getAllPosts() {
     });
 }
 
-//Update post
+// Update post
 export async function updatePost(
-  post_id: string,
+  postId: string,
   fieldsToEdit: PostDoc,
   requestedUser: UserDoc
 ) {
-  let error: string;
-  return await PostSchema.findById(post_id)
+  return await PostSchema.findById(postId)
     .populate("author")
     .then(async (post) => {
       if (!post) {
@@ -102,9 +101,9 @@ export async function updatePost(
     });
 }
 
-//Delete post
-export async function deletePost(post_id: string, requestedUser: UserDoc) {
-  return await PostSchema.findById(post_id)
+// Delete post
+export async function deletePost(postId: string, requestedUser: UserDoc) {
+  return await PostSchema.findById(postId)
     .populate("author")
     .then(async (post) => {
       if (!post) {
@@ -114,7 +113,7 @@ export async function deletePost(post_id: string, requestedUser: UserDoc) {
       if (post.author._id.toString() !== requestedUser._id.toString()) {
         return responseJson(400, "You cannot edit this user");
       } else {
-        //Delete the id from User's Posts array
+        // Delete the id from User's Posts array
         await UserSchema.findById(post.author._id).updateOne({
           $pull: { posts: { $in: post._id } },
         });
@@ -124,22 +123,22 @@ export async function deletePost(post_id: string, requestedUser: UserDoc) {
     });
 }
 
-//Add comment to post
+// Add comment to post
 export async function createComment(
-  post_id: String,
+  postId: string,
   requestedUser: UserDoc,
   commentBody: string
 ) {
   if (!commentBody) {
     return await responseJson(400, "Comment is empty");
   }
-  const post: PostDoc = await PostSchema.findById(post_id);
+  const post: PostDoc = await PostSchema.findById(postId);
   if (!post) {
     return await responseJson(404, "Cannot find user");
   }
   const newComment = {
     user: requestedUser,
-    commentBody: commentBody,
+    commentBody,
     createdDate: moment(),
     lastUpdatedDate: moment(),
   };

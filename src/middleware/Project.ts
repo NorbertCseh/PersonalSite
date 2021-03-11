@@ -5,12 +5,12 @@ import UserSchema from "../models/User";
 import ProjectSchema from "../models/Project";
 import { responseJson } from "../helper/response";
 
-//Create project
+// Create project
 export async function createProject(
   requestedUser: UserDoc,
   project: ProjectDoc
 ) {
-  let error: Array<string>;
+  const error: string[] = [];
   if (!project.name) {
     return responseJson(400, "Name cannot be empty");
   } else {
@@ -38,9 +38,9 @@ export async function createProject(
   }
 }
 
-//Get single project
-export async function getProject(project_id: string) {
-  return await ProjectSchema.findById(project_id)
+// Get single project
+export async function getProject(projectId: string) {
+  return await ProjectSchema.findById(projectId)
     .populate("user")
     .then(async (project) => {
       if (!project) {
@@ -51,7 +51,7 @@ export async function getProject(project_id: string) {
     });
 }
 
-//Get All project
+// Get All project
 export async function getProjects() {
   return await ProjectSchema.find().then(async (projects) => {
     if (!projects) {
@@ -62,9 +62,9 @@ export async function getProjects() {
   });
 }
 
-//Get All project from a user
+// Get All project from a user
 export async function getProjectsFromOneUser(handle: string) {
-  return await UserSchema.findOne({ handle: handle })
+  return await UserSchema.findOne({ handle })
     .populate("projects")
     .then(async (user) => {
       if (!user) {
@@ -75,19 +75,19 @@ export async function getProjectsFromOneUser(handle: string) {
     });
 }
 
-//Edit project
+// Edit project
 export async function updateProject(
-  project_id: string,
+  projectId: string,
   requestedUser: UserDoc,
   fieldToUpdate: ProjectDoc
 ) {
-  let error: Array<string>;
+  const error: string[] = [];
   if (Object.keys(fieldToUpdate).length === 0) {
     return responseJson(400, "No field to edit");
   }
   const reqUser = await UserSchema.findById(requestedUser.id);
 
-  const project = await ProjectSchema.findById(project_id);
+  const project = await ProjectSchema.findById(projectId);
   if (!project) {
     return responseJson(400, "Cannot find project");
   }
@@ -116,11 +116,8 @@ export async function updateProject(
   return responseJson(200, project);
 }
 
-export async function deleteProject(
-  project_id: string,
-  requestedUser: UserDoc
-) {
-  const project = await ProjectSchema.findById(project_id);
+export async function deleteProject(projectId: string, requestedUser: UserDoc) {
+  const project = await ProjectSchema.findById(projectId);
   if (!project) {
     return responseJson(404, "Cannot find project");
   }

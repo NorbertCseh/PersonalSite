@@ -10,7 +10,7 @@ import * as passport from "passport";
 
 const router = express.Router();
 
-//Get single profile by handle
+// Get single profile by handle
 router.get(
   "/:handle",
   passport.authenticate("jwt", { session: false }),
@@ -25,7 +25,7 @@ router.get(
   }
 );
 
-//Create profile
+// Create profile
 router.post(
   "/:handle",
   passport.authenticate("jwt", { session: false }),
@@ -40,7 +40,7 @@ router.post(
   }
 );
 
-//Update profile by users handle
+// Update profile by users handle
 router.put(
   "/:handle",
   passport.authenticate("jwt", { session: false }),

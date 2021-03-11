@@ -13,7 +13,7 @@ import { getAllPosts } from "middleware/Post";
 
 const router = express.Router();
 
-//Create project
+// Create project
 router.post(
   "/create-project",
   passport.authenticate("jwt", { session: false }),
@@ -28,7 +28,7 @@ router.post(
   }
 );
 
-//Get all projects
+// Get all projects
 router.get(
   "/projects",
   passport.authenticate("jwt", { session: false }),
@@ -43,7 +43,7 @@ router.get(
   }
 );
 
-//Get all projects from a user
+// Get all projects from a user
 router.get(
   "/:handle/projects",
   passport.authenticate("jwt", { session: false }),
@@ -58,7 +58,7 @@ router.get(
   }
 );
 
-//Get single projects for user
+// Get single projects for user
 router.get(
   "/:project_id",
   passport.authenticate("jwt", { session: false }),
@@ -73,7 +73,7 @@ router.get(
   }
 );
 
-//Update project
+// Update project
 router.put(
   "/:project_id",
   passport.authenticate("jwt", { session: false }),
@@ -88,7 +88,7 @@ router.put(
   }
 );
 
-//Delete project
+// Delete project
 router.delete(
   "/:project_id",
   passport.authenticate("jwt", { session: false }),

@@ -36,8 +36,8 @@ export async function createUser(
 
       return await newUser
         .save()
-        .then((user) => {
-          return responseJson(201, user);
+        .then((resUser) => {
+          return responseJson(201, resUser);
         })
         .catch((err) => {
           return responseJson(400, err);
@@ -122,7 +122,7 @@ export async function editUser(
   }
 }
 
-//Get single user by handle
+// Get single user by handle
 export async function getSingleUser(handle: string) {
   return await UserSchema.findOne({ handle })
     .then((user) => {
@@ -137,7 +137,7 @@ export async function getSingleUser(handle: string) {
     });
 }
 
-//Get all users
+// Get all users
 export async function getAllUsers() {
   return await UserSchema.find().then((users) => {
     return responseJson(200, users);
@@ -146,7 +146,7 @@ export async function getAllUsers() {
 
 export async function deleteUser(handle, requestedUser: UserDoc) {
   const reqUser = await UserSchema.findById(requestedUser._id);
-  const uTD = await UserSchema.findOne({ handle: handle });
+  const uTD = await UserSchema.findOne({ handle });
   if (!uTD) {
     return responseJson(404, "Cannot find user");
   }

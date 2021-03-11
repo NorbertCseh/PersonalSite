@@ -12,7 +12,7 @@ import { UserDoc } from "../documents/User";
 
 const router = express.Router();
 
-//Create Post
+// Create Post
 router.post(
   "/create-post",
   passport.authenticate("jwt", { session: false }),
@@ -31,7 +31,7 @@ router.post(
   }
 );
 
-//Get All post
+// Get All post
 router.get(
   "/posts",
   passport.authenticate("jwt", { session: false }),
@@ -46,7 +46,7 @@ router.get(
   }
 );
 
-//Get single post
+// Get single post
 router.get(
   "/:post_id",
   passport.authenticate("jwt", { session: false }),
@@ -61,7 +61,7 @@ router.get(
   }
 );
 
-//Update post
+// Update post
 router.put(
   "/:post_id",
   passport.authenticate("jwt", { session: false }),
@@ -76,7 +76,7 @@ router.put(
   }
 );
 
-//Delete post
+// Delete post
 router.delete(
   "/:post_id",
   passport.authenticate("jwt", { session: false }),

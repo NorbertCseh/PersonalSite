@@ -5,9 +5,9 @@ import ProfileSchema from "../models/Profile";
 import moment = require("moment");
 import { responseJson } from "../helper/response";
 
-//Get single profile by handle
+// Get single profile by handle
 export async function getProfileByUserHandle(handle: string) {
-  return await UserSchema.findOne({ handle: handle })
+  return await UserSchema.findOne({ handle })
     .populate("profile")
     .then(async (user) => {
       if (!user) {
@@ -23,7 +23,7 @@ export async function getProfileByUserHandle(handle: string) {
     });
 }
 
-//Create profile
+// Create profile
 export async function createProfile(
   handle: string,
   requestedUser: UserDoc,
@@ -46,8 +46,8 @@ export async function createProfile(
     createdDate: moment(),
     lastUpdatedDate: moment(),
   });
-  //TODO: Rework pls
-  return await UserSchema.findOne({ handle: handle }).then(async (user) => {
+  // TODO: Rework pls
+  return await UserSchema.findOne({ handle }).then(async (user) => {
     if (!user) {
       return responseJson(404, "User not found");
     }
@@ -72,13 +72,13 @@ export async function createProfile(
   });
 }
 
-//Edit profile REWORKLDPLS
+// Edit profile REWORKLDPLS
 export async function updateProfile(
   handle: string,
   requestedUser: UserDoc,
   fieldsToEdit: ProfileDoc
 ) {
-  return await UserSchema.findOne({ handle: handle })
+  return await UserSchema.findOne({ handle })
     .populate("profile")
     .then(async (user) => {
       if (requestedUser._id.toString() !== user._id.toString()) {
@@ -135,9 +135,9 @@ export async function updateProfile(
     });
 }
 
-//Delete Profile REWORK
+// Delete Profile REWORK
 export async function deleteProfile(handle: string, requestedUser: UserDoc) {
-  return await UserSchema.findOne({ handle: handle })
+  return await UserSchema.findOne({ handle })
     .populate("profile")
     .then(async (user) => {
       if (requestedUser._id.toString() !== user._id.toString()) {
