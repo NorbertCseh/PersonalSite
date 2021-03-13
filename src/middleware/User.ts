@@ -2,7 +2,6 @@ import UserSchema from "../models/User";
 import * as argon2 from "argon2";
 import * as jwt from "jsonwebtoken";
 import * as moment from "moment";
-import keys from "../config/keys";
 import { UserDoc } from "../documents/User";
 import { responseJson } from "../helper/response";
 
@@ -66,7 +65,7 @@ export async function loginUser(email: string, password: string) {
                   avatar: user.avatar,
                   isAdmin: user.isAdmin,
                 },
-                keys.secretOrKey,
+                process.env.Key,
                 {
                   expiresIn: 3600,
                 }

@@ -9,7 +9,9 @@
 		"prestart": "npm run build",
 		"dev": "nodemon .",
 		"client": "cd client && npm run dev",
+		"client-start": "cd client && npm run start",
 		"start": "concurrently \"npm run dev\" \"npm run client\"",
+		"prod": "concurrently \"npm run dev\" \"npm run client-start\"",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "NorbertCseh",
