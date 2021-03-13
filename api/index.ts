@@ -1,7 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import bodyParser from "body-parser";
 import cors from "cors";
 import passport from "passport";
 
@@ -30,17 +29,18 @@ async function main() {
     });
 
   app.use(passport.initialize());
-  require("./config/passport")(passport);
+  //require("./config/passport")(passport);
+  const passportConf = require("./config/Passport")
+  passportConf(passport)
 
-  app.use(bodyParser.urlencoded({ extended: false }));
-  app.use(bodyParser.json());
+  app.use(express.json())
 
   app.use("/api/user", userRoutes);
   app.use("/api/post", postRoutes);
   app.use("/api/profile", profileRoutes);
   app.use("/api/project", projectRoutes);
 
-  await app.get("/", (_:any, res:any) => {
+  await app.get("/", (_: any, res: any) => {
     res.send("Welcome");
   });
 

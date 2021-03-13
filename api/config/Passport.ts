@@ -5,15 +5,15 @@ const JwtStrategy = passportJwt.Strategy;
 const ExtractJwt = passportJwt.ExtractJwt;
 
 interface Options {
-  jwtFromRequest:any;
-  secretOrKey:any;
+  jwtFromRequest: any;
+  secretOrKey: any;
 }
 
 const settings: Options = { jwtFromRequest: null, secretOrKey: null };
 settings.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 settings.secretOrKey = process.env.Key;
 
-module.exports = (passport:any) => {
+module.exports = (passport: any) => {
   passport.use(
     new JwtStrategy(settings, (jwtPayload, done) => {
       User.findById(jwtPayload.id)
