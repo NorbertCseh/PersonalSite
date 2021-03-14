@@ -12,7 +12,7 @@ import projectRoutes from "./routes/Project";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.SERVER_PORT;
 
 app.use(cors());
 
@@ -40,7 +40,7 @@ async function main() {
   app.use("/api/profile", profileRoutes);
   app.use("/api/project", projectRoutes);
 
-  await app.get("/", (_: any, res: any) => {
+  app.get("/", (_: any, res: any) => {
     res.send("Welcome");
   });
 
