@@ -38,12 +38,21 @@ export default {
     'nuxt-buefy',
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxt/http',
+    '@nuxtjs/proxy'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-
+    baseURL: 'http://localhost:3000',
+    proxy: true
   },
+
+  // proxy: {
+  //   // '/api/': { target: `http://localhost:${process.env.SERVER_PORT}/`, pathRewrite: { '^/api/': '' }, changeOrigin: true }
+  //   //'/api/': { target: `http://localhost:${process.env.PORT}/` }
+  //   '/api/': 'http://localhost.com/3000', changeOrigin: true
+  // },
 
   /*
   ** Server Middleware

@@ -22,10 +22,20 @@ export default {
   },
   methods: {
     async login(email, password) {
-      const res = await this.$axios.$post('/api/user/login', {
-        email: email,
-        password: password,
-      })
+      console.log(
+        await this.$axios.$post('http://localhost:3000/api/user/login', {
+          email: email,
+          password: password,
+        })
+      )
+      const res = await this.$axios.$post(
+        'http://localhost:3000/api/user/login',
+        {
+          email: email,
+          password: password,
+        }
+      )
+      console.log(res)
       localStorage.setItem('Token', res.token)
       const decodedToken = jwt_decode(res.token)
       this.$store.commit('User/loadUser', decodedToken)

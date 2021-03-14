@@ -10,8 +10,10 @@
     "test": "jest"
   },
   "dependencies": {
+    "@nuxt/http": "^0.6.4",
     "@nuxt/typescript-runtime": "^2.1.0",
     "@nuxtjs/axios": "^5.12.5",
+    "@nuxtjs/proxy": "^2.1.0",
     "argon2": "^0.27.1",
     "core-js": "^3.8.3",
     "cors": "^2.8.5",
