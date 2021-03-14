@@ -44,7 +44,7 @@ router.post("/login", (req, res) => {
 // Get all Users
 router.get(
   "/users",
-  passport.authenticate("jwt", { session: false }),
+  // passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     return await getAllUsers()
       .then(async (response) => {
@@ -59,7 +59,7 @@ router.get(
 // Get single User
 router.get(
   "/:handle",
-  passport.authenticate("jwt", { session: false }),
+  // passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     return await getSingleUser(req.params.handle)
       .then(async (response) => {

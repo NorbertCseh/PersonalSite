@@ -31,7 +31,7 @@ router.post(
 // Get all projects
 router.get(
   "/projects",
-  passport.authenticate("jwt", { session: false }),
+  // passport.authenticate("jwt", { session: false }),
   (req, res) => {
     return getProjects()
       .then((response) => {
@@ -46,7 +46,7 @@ router.get(
 // Get all projects from a user
 router.get(
   "/:handle/projects",
-  passport.authenticate("jwt", { session: false }),
+  // passport.authenticate("jwt", { session: false }),
   (req, res) => {
     return getProjectsFromOneUser(req.params.handle)
       .then((response) => {
@@ -61,7 +61,7 @@ router.get(
 // Get single projects for user
 router.get(
   "/:project_id",
-  passport.authenticate("jwt", { session: false }),
+  // passport.authenticate("jwt", { session: false }),
   (req, res) => {
     return getProject(req.params.project_id)
       .then((response) => {

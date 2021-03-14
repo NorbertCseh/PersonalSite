@@ -34,7 +34,7 @@ router.post(
 // Get All post
 router.get(
   "/posts",
-  passport.authenticate("jwt", { session: false }),
+  // passport.authenticate("jwt", { session: false }),
   (req, res) => {
     return getAllPosts()
       .then((response) => {
@@ -49,7 +49,7 @@ router.get(
 // Get single post
 router.get(
   "/:post_id",
-  passport.authenticate("jwt", { session: false }),
+  // passport.authenticate("jwt", { session: false }),
   (req, res) => {
     return getSinglePost(req.params.post_id)
       .then((response) => {
@@ -90,7 +90,6 @@ router.delete(
       });
   }
 );
-export default router;
 
 router.post(
   "/:post_id/comment",
@@ -109,3 +108,5 @@ router.post(
       });
   }
 );
+
+export default router;

@@ -13,7 +13,7 @@ const router = express.Router();
 // Get single profile by handle
 router.get(
   "/:handle",
-  passport.authenticate("jwt", { session: false }),
+  // passport.authenticate("jwt", { session: false }),
   (req, res) => {
     return getProfileByUserHandle(req.params.handle)
       .then((response) => {
