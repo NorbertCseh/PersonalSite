@@ -44,8 +44,12 @@ async function main() {
     res.send("Welcome");
   });
 
-  await app.listen(PORT, () => {
-    console.log(`App is running on: http://localhost:${PORT}`);
-  });
+  if (require.main === module) {
+    const port = process.env.SERVER_PORT
+    app.listen(port, () => {
+      // eslint-disable-next-line no-console
+      console.log(`API server listening on port ${port}`)
+    })
+  }
 }
 main();
